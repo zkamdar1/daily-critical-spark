@@ -1,4 +1,3 @@
-
 import React, { createContext, useContext, useEffect, useState } from 'react';
 import { Attempt, GameState, Question } from '../types/game';
 import { getTodaysQuestion } from '../data/questions';
@@ -29,18 +28,13 @@ const GameContext = createContext<GameContextProps | undefined>(undefined);
 export const GameProvider: React.FC<{ children: React.ReactNode }> = ({ children }) => {
   const [gameState, setGameState] = useState<GameState>(initialGameState);
 
-  // Initialize or load game state
   useEffect(() => {
     const storedState = localStorage.getItem('criticalThinkerState');
     
     if (storedState) {
       const parsedState: GameState = JSON.parse(storedState);
       
-      // Check if this is a new day
-      const today = new Date().toISOString().split('T')[0];
-      
-      if (parsedState.lastPlayedDate !== today) {
-        // It's a new day, load a new question but keep the streak
+      if (parsedState.lastPlayedDate !== new Date().toISOString().split('T')[0]) {
         const todaysQuestion = getTodaysQuestion();
         setGameState({
           currentDay: todaysQuestion.day,
@@ -48,16 +42,14 @@ export const GameProvider: React.FC<{ children: React.ReactNode }> = ({ children
           attempts: [],
           gameEnded: false,
           streak: parsedState.streak,
-          lastPlayedDate: today,
+          lastPlayedDate: new Date().toISOString().split('T')[0],
           hintUsed: false,
           answerRevealed: false,
         });
       } else {
-        // Continue with saved state
         setGameState(parsedState);
       }
     } else {
-      // First time playing, set up new game
       const todaysQuestion = getTodaysQuestion();
       const today = new Date().toISOString().split('T')[0];
       
@@ -74,33 +66,35 @@ export const GameProvider: React.FC<{ children: React.ReactNode }> = ({ children
     }
   }, []);
 
-  // Save game state whenever it changes
   useEffect(() => {
     if (gameState.question) {
       localStorage.setItem('criticalThinkerState', JSON.stringify(gameState));
     }
   }, [gameState]);
 
-  // Calculate closeness score for numerical questions
   const calculateCloseness = (guess: number, answer: number, min: number, max: number): number => {
     if (guess === answer) return 100;
     
-    // Basic percentage error calculation
     const closeness = 100 * (1 - Math.abs(guess - answer) / Math.max(answer, 1));
-    
-    // Clamp between 0 and 100
     return Math.max(0, Math.min(100, closeness));
   };
 
-  // Check if text answer is correct
   const isTextCorrect = (guess: string, answers: string[]): boolean => {
     const normalizedGuess = guess.trim().toLowerCase();
-    return answers.some(answer => 
+    const result = answers.some(answer => 
       normalizedGuess === answer.toLowerCase().trim()
     );
+    
+    console.log('Text Answer Validation:', {
+      guess,
+      normalizedGuess,
+      answers,
+      isCorrect: result
+    });
+    
+    return result;
   };
 
-  // Submit a guess
   const submitGuess = (guessInput: string) => {
     if (gameState.gameEnded || !gameState.question || gameState.attempts.length >= 6) {
       return;
@@ -112,7 +106,6 @@ export const GameProvider: React.FC<{ children: React.ReactNode }> = ({ children
     if (question.type === 'numerical') {
       const guessNumber = parseInt(guessInput);
       
-      // Validate number
       if (isNaN(guessNumber)) {
         toast({
           title: "Invalid input",
@@ -122,7 +115,6 @@ export const GameProvider: React.FC<{ children: React.ReactNode }> = ({ children
         return;
       }
 
-      // Calculate closeness
       const answer = question.answer as number;
       const min = question.min || 0;
       const max = question.max || answer * 2;
@@ -136,7 +128,6 @@ export const GameProvider: React.FC<{ children: React.ReactNode }> = ({ children
         isCorrect
       };
     } else {
-      // Text question
       const answers = question.answer as string[];
       const isCorrect = isTextCorrect(guessInput, answers);
 
@@ -181,7 +172,6 @@ export const GameProvider: React.FC<{ children: React.ReactNode }> = ({ children
     });
   };
 
-  // Reset game (mainly for testing)
   const resetGame = () => {
     const todaysQuestion = getTodaysQuestion();
     const today = new Date().toISOString().split('T')[0];
@@ -198,7 +188,6 @@ export const GameProvider: React.FC<{ children: React.ReactNode }> = ({ children
     });
   };
 
-  // Use hint
   const useHint = () => {
     if (!gameState.hintUsed) {
       setGameState({
@@ -208,13 +197,11 @@ export const GameProvider: React.FC<{ children: React.ReactNode }> = ({ children
     }
   };
 
-  // Reveal answer
   const revealAnswer = (claimCorrect: boolean) => {
     if (gameState.gameEnded || !gameState.question) return;
     
     let streak = gameState.streak;
     
-    // If the user claims their answer was correct but wasn't matching
     if (claimCorrect) {
       streak += 1;
       toast({
@@ -237,30 +224,26 @@ export const GameProvider: React.FC<{ children: React.ReactNode }> = ({ children
     });
   };
 
-  // Generate and share results
   const shareResults = () => {
     if (!gameState.question) return;
 
     const { attempts, question, hintUsed, answerRevealed } = gameState;
     let shareText = `#CriticalThinker #Day${question.day}\n`;
     
-    // Add score
     if (attempts.length > 0 && attempts[attempts.length - 1].isCorrect) {
       shareText += `${attempts.length}/6`;
     } else if (answerRevealed) {
-      shareText += 'X/6*'; // Asterisk indicates revealed answer
+      shareText += 'X/6*';
     } else {
       shareText += 'X/6';
     }
     
-    // Add hint indicator
     if (hintUsed) {
-      shareText += '💡'; // Light bulb for hint used
+      shareText += '💡';
     }
     
     shareText += '\n\n';
 
-    // Add attempt visualization
     if (question.type === 'numerical') {
       for (const attempt of attempts) {
         const score = attempt.closenessScore || 0;
@@ -275,7 +258,6 @@ export const GameProvider: React.FC<{ children: React.ReactNode }> = ({ children
         }
       }
     } else {
-      // Text questions
       for (const attempt of attempts) {
         if (attempt.isCorrect) {
           shareText += '🟢🟢🟢\n';
@@ -285,14 +267,12 @@ export const GameProvider: React.FC<{ children: React.ReactNode }> = ({ children
       }
     }
     
-    // If the answer was revealed and not all attempts were used
     if (answerRevealed && attempts.length < 6) {
       shareText += '⚪⚪⚪\n';
     }
 
     shareText += '\ncriticalthinker.app';
 
-    // Copy to clipboard
     navigator.clipboard.writeText(shareText)
       .then(() => {
         toast({

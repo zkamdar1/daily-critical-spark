@@ -1,18 +1,15 @@
-
 import { Question } from '../types/game';
 
 // Enhanced set of questions with hints and explanations
 export const questions: Question[] = [
   {
     id: 1,
-    text: "How many elevators are there in Manhattan?",
-    type: "numerical",
-    answer: 58000,
-    min: 1000,
-    max: 200000,
+    text: "If 100 murderers are lined up and you have 1 bullet, how do you stop them from escaping (they'll try unless certain of death)?",
+    type: "text",
+    answer: ["shoot the first one", "kill the first one", "shoot one randomly"],
     day: 1,
-    hint: "Think about the number of high-rise buildings in Manhattan and how many elevators each might have.",
-    explanation: "Manhattan has approximately 58,000 elevators. This is based on building statistics and elevator density in commercial and residential high-rises."
+    hint: "Think about establishing credibility of your threat.",
+    explanation: "By shooting the first person (or a random person), you establish your willingness to use the gun, making your threat to the others credible even with no bullets left."
   },
   {
     id: 2,

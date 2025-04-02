@@ -1,3 +1,4 @@
+
 import React, { createContext, useContext, useEffect, useState } from 'react';
 import { Attempt, GameState, Question } from '../types/game';
 import { getTodaysQuestion } from '../data/questions';
@@ -8,6 +9,8 @@ interface GameContextProps {
   submitGuess: (guess: string) => void;
   resetGame: () => void;
   shareResults: () => void;
+  useHint: () => void;
+  revealAnswer: (claimCorrect: boolean) => void;
 }
 
 const initialGameState: GameState = {
@@ -17,6 +20,8 @@ const initialGameState: GameState = {
   gameEnded: false,
   streak: 0,
   lastPlayedDate: null,
+  hintUsed: false,
+  answerRevealed: false,
 };
 
 const GameContext = createContext<GameContextProps | undefined>(undefined);
@@ -44,6 +49,8 @@ export const GameProvider: React.FC<{ children: React.ReactNode }> = ({ children
           gameEnded: false,
           streak: parsedState.streak,
           lastPlayedDate: today,
+          hintUsed: false,
+          answerRevealed: false,
         });
       } else {
         // Continue with saved state
@@ -61,6 +68,8 @@ export const GameProvider: React.FC<{ children: React.ReactNode }> = ({ children
         gameEnded: false,
         streak: 0,
         lastPlayedDate: today,
+        hintUsed: false,
+        answerRevealed: false,
       });
     }
   }, []);
@@ -147,7 +156,7 @@ export const GameProvider: React.FC<{ children: React.ReactNode }> = ({ children
         streak += 1;
         toast({
           title: "Correct!",
-          description: `You got it in ${newAttempts.length} attempts!`,
+          description: `You got it in ${newAttempts.length} ${newAttempts.length === 1 ? 'attempt' : 'attempts'}!`,
           variant: "default"
         });
       } else {
@@ -184,28 +193,85 @@ export const GameProvider: React.FC<{ children: React.ReactNode }> = ({ children
       gameEnded: false,
       streak: 0,
       lastPlayedDate: today,
+      hintUsed: false,
+      answerRevealed: false,
+    });
+  };
+
+  // Use hint
+  const useHint = () => {
+    if (!gameState.hintUsed) {
+      setGameState({
+        ...gameState,
+        hintUsed: true
+      });
+    }
+  };
+
+  // Reveal answer
+  const revealAnswer = (claimCorrect: boolean) => {
+    if (gameState.gameEnded || !gameState.question) return;
+    
+    let streak = gameState.streak;
+    
+    // If the user claims their answer was correct but wasn't matching
+    if (claimCorrect) {
+      streak += 1;
+      toast({
+        title: "Answer Revealed",
+        description: "You've marked your answer as correct"
+      });
+    } else {
+      streak = 0;
+      toast({
+        title: "Answer Revealed",
+        description: "The answer has been revealed"
+      });
+    }
+
+    setGameState({
+      ...gameState,
+      gameEnded: true,
+      answerRevealed: true,
+      streak
     });
   };
 
   // Generate and share results
   const shareResults = () => {
-    if (!gameState.gameEnded || !gameState.question) return;
+    if (!gameState.question) return;
 
-    const { attempts, question } = gameState;
-    let shareText = `#CriticalThinker #Day${question.day}\n${attempts.length}/6\n`;
+    const { attempts, question, hintUsed, answerRevealed } = gameState;
+    let shareText = `#CriticalThinker #Day${question.day}\n`;
+    
+    // Add score
+    if (attempts.length > 0 && attempts[attempts.length - 1].isCorrect) {
+      shareText += `${attempts.length}/6`;
+    } else if (answerRevealed) {
+      shareText += 'X/6*'; // Asterisk indicates revealed answer
+    } else {
+      shareText += 'X/6';
+    }
+    
+    // Add hint indicator
+    if (hintUsed) {
+      shareText += '💡'; // Light bulb for hint used
+    }
+    
+    shareText += '\n\n';
 
     // Add attempt visualization
     if (question.type === 'numerical') {
       for (const attempt of attempts) {
         const score = attempt.closenessScore || 0;
-        if (score < 33) {
-          shareText += '🔵🔵🔵\n';
-        } else if (score < 66) {
-          shareText += '🟡🟡🟡\n';
-        } else if (score < 100) {
-          shareText += '🟢🟢🟡\n';
-        } else {
+        if (score === 100) {
           shareText += '🟢🟢🟢\n';
+        } else if (score >= 66) {
+          shareText += '🟢🟡🟡\n';
+        } else if (score >= 33) {
+          shareText += '🟡🟡🔵\n';
+        } else {
+          shareText += '🔵🔵🔵\n';
         }
       }
     } else {
@@ -218,8 +284,13 @@ export const GameProvider: React.FC<{ children: React.ReactNode }> = ({ children
         }
       }
     }
+    
+    // If the answer was revealed and not all attempts were used
+    if (answerRevealed && attempts.length < 6) {
+      shareText += '⚪⚪⚪\n';
+    }
 
-    shareText += 'criticalthinker.app';
+    shareText += '\ncriticalthinker.app';
 
     // Copy to clipboard
     navigator.clipboard.writeText(shareText)
@@ -239,7 +310,14 @@ export const GameProvider: React.FC<{ children: React.ReactNode }> = ({ children
   };
 
   return (
-    <GameContext.Provider value={{ gameState, submitGuess, resetGame, shareResults }}>
+    <GameContext.Provider value={{ 
+      gameState, 
+      submitGuess, 
+      resetGame, 
+      shareResults,
+      useHint,
+      revealAnswer
+    }}>
       {children}
     </GameContext.Provider>
   );

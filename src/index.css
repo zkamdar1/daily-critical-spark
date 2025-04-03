@@ -121,3 +121,38 @@
     height: -webkit-fill-available;
   }
 }
+
+/* Grid layout styling */
+.game-grid {
+  display: grid;
+  grid-template-columns: repeat(5, 1fr);
+  grid-template-rows: repeat(6, 1fr);
+  gap: 5px;
+}
+
+.game-grid-cell {
+  aspect-ratio: 1;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border: 1px solid #333;
+  font-weight: bold;
+  text-transform: uppercase;
+}
+
+/* Animation utilities */
+@keyframes flip {
+  0% {
+    transform: rotateX(0);
+  }
+  50% {
+    transform: rotateX(90deg);
+  }
+  100% {
+    transform: rotateX(0);
+  }
+}
+
+.animate-flip {
+  animation: flip 0.5s ease-in-out;
+}

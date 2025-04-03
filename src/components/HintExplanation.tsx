@@ -1,7 +1,6 @@
 
 import React, { useState } from 'react';
 import { Button } from './ui/button';
-import { Collapsible, CollapsibleContent, CollapsibleTrigger } from './ui/collapsible';
 import { Question } from '../types/game';
 import { useToast } from '../components/ui/use-toast';
 import { LightbulbIcon, BookOpen } from 'lucide-react';
@@ -45,7 +44,7 @@ const HintExplanation: React.FC<HintExplanationProps> = ({
   };
 
   return (
-    <div className="w-full max-w-md mx-auto px-2">
+    <div className="w-full">
       <div className="flex flex-col gap-1">
         {/* Hint Button/Content */}
         {!hintUsed ? (
@@ -53,10 +52,10 @@ const HintExplanation: React.FC<HintExplanationProps> = ({
             onClick={handleUseHint} 
             variant="outline"
             size="sm"
-            className="text-amber-600 border-amber-200 hover:bg-amber-50"
+            className="text-amber-500 border-gray-700 hover:bg-gray-800 bg-gray-800"
           >
             <LightbulbIcon className="mr-1 h-3 w-3" />
-            Get a Hint
+            Hint
           </Button>
         ) : (
           <div className="space-y-1">
@@ -64,14 +63,14 @@ const HintExplanation: React.FC<HintExplanationProps> = ({
               onClick={handleUseHint}
               variant="outline"
               size="sm"
-              className="w-full text-amber-600 border-amber-200 hover:bg-amber-50"
+              className="w-full text-amber-500 border-gray-700 hover:bg-gray-800 bg-gray-800"
             >
               <LightbulbIcon className="mr-1 h-3 w-3" />
-              {showHint ? 'Hide Hint' : 'Show Hint'}
+              {showHint ? 'Hide' : 'Hint'}
             </Button>
             
             {showHint && (
-              <div className="rounded-md border p-2 text-xs bg-amber-50 animate-fade-in">
+              <div className="rounded-md border border-gray-700 p-2 text-xs bg-gray-800 animate-fade-in text-gray-300">
                 {question.hint || "No hint available for this question."}
               </div>
             )}
@@ -85,14 +84,14 @@ const HintExplanation: React.FC<HintExplanationProps> = ({
               onClick={handleToggleExplanation}
               variant="outline"
               size="sm"
-              className="w-full text-indigo-600 border-indigo-200 hover:bg-indigo-50"
+              className="w-full text-indigo-400 border-gray-700 hover:bg-gray-800 bg-gray-800"
             >
               <BookOpen className="mr-1 h-3 w-3" />
-              {showExplanation ? 'Hide Explanation' : 'Show Explanation'}
+              {showExplanation ? 'Hide' : 'Explain'}
             </Button>
             
             {showExplanation && (
-              <div className="rounded-md border p-2 text-xs bg-indigo-50 animate-fade-in">
+              <div className="rounded-md border border-gray-700 p-2 text-xs bg-gray-800 animate-fade-in text-gray-300">
                 {question.explanation}
               </div>
             )}

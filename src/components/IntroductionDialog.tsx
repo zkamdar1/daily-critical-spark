@@ -7,82 +7,67 @@ import {
   DialogFooter,
   DialogHeader,
   DialogTitle,
-} from './ui/dialog';
-import { Button } from './ui/button';
-import { HelpCircle, CheckCircle, AlertCircle, Info } from 'lucide-react';
+} from '@/components/ui/dialog';
+import { Button } from '@/components/ui/button';
 
 const IntroductionDialog: React.FC = () => {
-  const [showIntro, setShowIntro] = useState(false);
-  
+  const [isOpen, setIsOpen] = useState(false);
+
   useEffect(() => {
     const hasSeenIntro = localStorage.getItem('hasSeenIntro');
     if (!hasSeenIntro) {
-      setShowIntro(true);
+      setIsOpen(true);
     }
   }, []);
 
   const handleClose = () => {
-    setShowIntro(false);
     localStorage.setItem('hasSeenIntro', 'true');
+    setIsOpen(false);
   };
 
   return (
-    <Dialog open={showIntro} onOpenChange={(open) => {
-      if (!open) handleClose();
-      else setShowIntro(open);
-    }}>
-      <DialogContent className="sm:max-w-[425px] max-h-[90vh] overflow-auto">
+    <Dialog open={isOpen} onOpenChange={setIsOpen}>
+      <DialogContent className="sm:max-w-[500px] p-6 bg-gray-800 border-gray-700 text-gray-100">
         <DialogHeader>
-          <DialogTitle className="text-xl flex items-center gap-2 text-green-600">
-            <HelpCircle className="h-5 w-5" />
-            How to Play
-          </DialogTitle>
-          <DialogDescription>
-            Welcome to Daily Critical Spark!
-          </DialogDescription>
+          <DialogTitle className="text-2xl font-bold text-center text-gray-100">Daily Quiz Challenge</DialogTitle>
+          <div className="text-center text-sm text-gray-400 mt-1">Test your knowledge every day!</div>
         </DialogHeader>
-
-        <div className="py-2 space-y-6 text-left">
-          <div className="bg-green-50 p-4 rounded-lg border border-green-100">
-            <p className="text-sm leading-relaxed text-gray-700">
-              This game tests your critical thinking with one challenging question each day.
-            </p>
-          </div>
+        
+        <div className="space-y-4 my-2">
+          <DialogDescription className="text-gray-300 text-base">
+            Welcome to the Daily Quiz Challenge! Each day, you'll get a new question to test your knowledge.
+          </DialogDescription>
           
-          <div className="space-y-4">
-            <div className="flex gap-3">
-              <div className="mt-1 text-blue-500 flex-shrink-0">
-                <Info className="h-5 w-5" />
-              </div>
-              <div>
-                <h3 className="font-semibold text-blue-700">Basic Rules</h3>
-                <ul className="list-disc pl-5 space-y-2 mt-2 text-sm text-gray-700">
-                  <li>You have <span className="font-medium">6 attempts</span> to answer each daily question</li>
-                  <li>For <span className="font-medium">text questions</span>, spelling matters but not capitalization</li>
-                  <li>For <span className="font-medium">numerical questions</span>, you'll see how close your guess is</li>
-                </ul>
-              </div>
+          <div className="space-y-4 text-sm">
+            <div className="bg-gray-700 p-3 rounded-md">
+              <h3 className="font-bold mb-1 text-gray-200">How to Play</h3>
+              <ul className="list-disc pl-5 space-y-1 text-gray-300">
+                <li>You have 6 attempts to answer each daily question</li>
+                <li>Type your answer in the input box and press enter</li>
+                <li>Use hints if you get stuck (but they affect your score)</li>
+                <li>Build a streak by answering correctly each day</li>
+              </ul>
             </div>
-
-            <div className="flex gap-3">
-              <div className="mt-1 text-amber-500 flex-shrink-0">
-                <AlertCircle className="h-5 w-5" />
+            
+            <div className="grid grid-cols-2 gap-3 text-center">
+              <div className="bg-gray-700 p-3 rounded-md">
+                <p className="font-bold text-yellow-400">Hints</p>
+                <p className="text-gray-300 text-xs mt-1">Click the "Hint" button if you need help, but remember using hints will affect your streak.</p>
               </div>
-              <div>
-                <h3 className="font-semibold text-amber-700">Special Features</h3>
-                <ul className="list-disc pl-5 space-y-2 mt-2 text-sm text-gray-700">
-                  <li><span className="font-medium">Hint Button</span>: Gives you a clue but counts as one attempt</li>
-                  <li><span className="font-medium">"I Think I'm Right" Button</span>: If your answer isn't recognized but you believe it's correct</li>
-                  <li><span className="font-medium">Share Results</span>: Challenge friends with your score!</li>
-                </ul>
+              
+              <div className="bg-gray-700 p-3 rounded-md">
+                <p className="font-bold text-blue-400">Current Streak: <span>0</span></p>
+                <p className="text-gray-300 text-xs mt-1">Come back daily to build your knowledge streak!</p>
               </div>
             </div>
           </div>
         </div>
-
-        <DialogFooter className="pt-2">
-          <Button onClick={handleClose} className="w-full bg-green-600 hover:bg-green-700">
-            <CheckCircle className="mr-2 h-4 w-4" />
+        
+        <DialogFooter>
+          <Button 
+            onClick={handleClose} 
+            className="w-full bg-green-600 hover:bg-green-700"
+          >
             Start Playing
           </Button>
         </DialogFooter>

@@ -1,6 +1,7 @@
 
 import React from 'react';
 import { GameProvider } from '../contexts/GameContext';
+import GameHeader from './GameHeader';
 import QuestionDisplay from './QuestionDisplay';
 import GuessForm from './GuessForm';
 import AttemptsDisplay from './AttemptsDisplay';
@@ -18,6 +19,7 @@ const GameContent: React.FC = () => {
   
   return (
     <div className="flex flex-col h-[100dvh] overflow-hidden">
+      <GameHeader />
       <main className="flex-1 flex flex-col p-2 overflow-hidden">
         <div className="space-y-2 flex-1 flex flex-col">
           <QuestionDisplay question={gameState.question} />

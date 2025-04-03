@@ -61,7 +61,7 @@ const RevealAnswerDialog: React.FC<RevealAnswerDialogProps> = ({
         <Button 
           variant="outline" 
           className="text-gray-500 border-gray-200 hover:bg-gray-50"
-          size={isMobile ? "sm" : "default"}
+          size="sm"
         >
           I Think I'm Right
         </Button>
@@ -105,10 +105,10 @@ const RevealAnswerDialog: React.FC<RevealAnswerDialogProps> = ({
         </div>
         
         <DialogFooter className="mt-2">
-          <Button variant="outline" onClick={handleCancel} size={isMobile ? "sm" : "default"}>
+          <Button variant="outline" onClick={handleCancel} size="sm">
             Cancel
           </Button>
-          <Button onClick={handleReveal} size={isMobile ? "sm" : "default"}>
+          <Button onClick={handleReveal} size="sm">
             {!showAnswer ? "Show Answer" : "Confirm"}
           </Button>
         </DialogFooter>

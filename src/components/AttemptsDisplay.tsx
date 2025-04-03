@@ -8,12 +8,14 @@ interface AttemptsDisplayProps {
   attempts: Attempt[];
   question: Question | null;
   maxAttempts?: number;
+  compact?: boolean;
 }
 
 const AttemptsDisplay: React.FC<AttemptsDisplayProps> = ({ 
   attempts, 
   question, 
-  maxAttempts = 6 
+  maxAttempts = 6,
+  compact = false
 }) => {
   if (!question) return null;
 
@@ -42,14 +44,33 @@ const AttemptsDisplay: React.FC<AttemptsDisplayProps> = ({
   const emptyRows = Math.max(0, maxAttempts - attempts.length);
 
   return (
-    <div className="w-full max-w-md mx-auto mt-6 px-4">
-      <div className="space-y-3">
+    <div className={cn(
+      "w-full max-w-md mx-auto px-2",
+      compact ? "mt-1" : "mt-6"
+    )}>
+      <div className={cn(
+        "space-y-1", 
+        compact && "overflow-auto max-h-[30vh] pr-1"
+      )}>
         {attempts.map((attempt, index) => (
           <div key={index} className="flex items-center space-x-2 animate-fade-in">
-            <div className="w-8 text-right text-sm">{index + 1}.</div>
-            <div className="flex-1 border rounded-md p-3 flex flex-col bg-white shadow-sm">
-              <div className="flex justify-between items-center mb-1">
-                <span className="font-medium">{attempt.guess}</span>
+            <div className={cn(
+              "text-right text-sm",
+              compact ? "w-5" : "w-8"
+            )}>
+              {index + 1}.
+            </div>
+            <div className={cn(
+              "flex-1 border rounded-md bg-white shadow-sm",
+              compact ? "p-2" : "p-3"
+            )}>
+              <div className="flex justify-between items-center">
+                <span className={cn(
+                  "font-medium",
+                  compact ? "text-sm" : ""
+                )}>
+                  {attempt.guess}
+                </span>
                 <div className="flex space-x-1">
                   {question.type === 'numerical' ? (
                     <span className={cn(
@@ -74,7 +95,7 @@ const AttemptsDisplay: React.FC<AttemptsDisplayProps> = ({
                   <Progress 
                     value={attempt.closenessScore} 
                     max={100}
-                    className={cn("h-2 bg-gray-100")}
+                    className="h-1.5 bg-gray-100"
                     indicatorClassName={getProgressColor(attempt)}
                   />
                 </div>
@@ -84,14 +105,32 @@ const AttemptsDisplay: React.FC<AttemptsDisplayProps> = ({
         ))}
         
         {/* Empty slots for remaining attempts */}
-        {Array.from({ length: emptyRows }).map((_, index) => (
-          <div key={`empty-${index}`} className="flex items-center space-x-2">
-            <div className="w-8 text-right text-sm">{attempts.length + index + 1}.</div>
-            <div className="flex-1 border border-dashed rounded-md p-3 text-gray-300 flex justify-center">
-              -
-            </div>
+        {emptyRows > 0 && (
+          <div className={cn(
+            "grid gap-1",
+            compact ? "grid-cols-3" : ""
+          )}>
+            {Array.from({ length: emptyRows }).map((_, index) => (
+              <div key={`empty-${index}`} className={cn(
+                "flex items-center space-x-2",
+                compact && "col-span-1"
+              )}>
+                <div className={cn(
+                  "text-right text-sm",
+                  compact ? "w-5" : "w-8"
+                )}>
+                  {attempts.length + index + 1}.
+                </div>
+                <div className={cn(
+                  "flex-1 border border-dashed rounded-md text-gray-300 flex justify-center",
+                  compact ? "py-1 text-xs" : "p-3"
+                )}>
+                  -
+                </div>
+              </div>
+            ))}
           </div>
-        ))}
+        )}
       </div>
     </div>
   );

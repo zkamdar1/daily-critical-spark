@@ -21,6 +21,7 @@ const HintExplanation: React.FC<HintExplanationProps> = ({
   gameEnded,
   answerRevealed
 }) => {
+  const [showHint, setShowHint] = useState(false);
   const [showExplanation, setShowExplanation] = useState(false);
   const { toast } = useToast();
 
@@ -29,66 +30,73 @@ const HintExplanation: React.FC<HintExplanationProps> = ({
   const handleUseHint = () => {
     if (!hintUsed) {
       onUseHint();
+      setShowHint(true);
       toast({
         title: "Hint revealed",
         description: "Using a hint may affect your sharing results"
       });
+    } else {
+      setShowHint(!showHint);
     }
   };
 
+  const handleToggleExplanation = () => {
+    setShowExplanation(!showExplanation);
+  };
+
   return (
-    <div className="w-full max-w-md mx-auto px-4 mt-2">
-      <div className="flex flex-col gap-2">
+    <div className="w-full max-w-md mx-auto px-2">
+      <div className="flex flex-col gap-1">
         {/* Hint Button/Content */}
-        <Collapsible open={hintUsed} className="w-full">
-          <div className="flex justify-center">
-            {!hintUsed ? (
-              <Button 
-                onClick={handleUseHint} 
-                variant="outline"
-                className="mb-2 text-amber-600 border-amber-200 hover:bg-amber-50"
-              >
-                <LightbulbIcon className="mr-2 h-4 w-4" />
-                Get a Hint
-              </Button>
-            ) : (
-              <CollapsibleTrigger asChild>
-                <Button 
-                  variant="outline"
-                  className="mb-2 text-amber-600 border-amber-200 hover:bg-amber-50 w-full"
-                >
-                  <LightbulbIcon className="mr-2 h-4 w-4" />
-                  {showExplanation ? 'Hide Hint' : 'Show Hint'}
-                </Button>
-              </CollapsibleTrigger>
+        {!hintUsed ? (
+          <Button 
+            onClick={handleUseHint} 
+            variant="outline"
+            size="sm"
+            className="text-amber-600 border-amber-200 hover:bg-amber-50"
+          >
+            <LightbulbIcon className="mr-1 h-3 w-3" />
+            Get a Hint
+          </Button>
+        ) : (
+          <div className="space-y-1">
+            <Button 
+              onClick={handleUseHint}
+              variant="outline"
+              size="sm"
+              className="w-full text-amber-600 border-amber-200 hover:bg-amber-50"
+            >
+              <LightbulbIcon className="mr-1 h-3 w-3" />
+              {showHint ? 'Hide Hint' : 'Show Hint'}
+            </Button>
+            
+            {showHint && (
+              <div className="rounded-md border p-2 text-xs bg-amber-50 animate-fade-in">
+                {question.hint || "No hint available for this question."}
+              </div>
             )}
           </div>
-          
-          <CollapsibleContent className="space-y-2">
-            <div className="rounded-md border p-4 text-sm bg-amber-50 animate-fade-in">
-              {question.hint || "No hint available for this question."}
-            </div>
-          </CollapsibleContent>
-        </Collapsible>
+        )}
         
         {/* Explanation (only shown when game is ended) */}
         {(gameEnded || answerRevealed) && question.explanation && (
-          <Collapsible className="w-full">
-            <CollapsibleTrigger asChild>
-              <Button 
-                variant="outline"
-                className="mb-2 w-full text-indigo-600 border-indigo-200 hover:bg-indigo-50"
-              >
-                <BookOpen className="mr-2 h-4 w-4" />
-                {showExplanation ? 'Hide Explanation' : 'Show Explanation'}
-              </Button>
-            </CollapsibleTrigger>
-            <CollapsibleContent className="space-y-2">
-              <div className="rounded-md border p-4 text-sm bg-indigo-50 animate-fade-in">
+          <div className="space-y-1">
+            <Button 
+              onClick={handleToggleExplanation}
+              variant="outline"
+              size="sm"
+              className="w-full text-indigo-600 border-indigo-200 hover:bg-indigo-50"
+            >
+              <BookOpen className="mr-1 h-3 w-3" />
+              {showExplanation ? 'Hide Explanation' : 'Show Explanation'}
+            </Button>
+            
+            {showExplanation && (
+              <div className="rounded-md border p-2 text-xs bg-indigo-50 animate-fade-in">
                 {question.explanation}
               </div>
-            </CollapsibleContent>
-          </Collapsible>
+            )}
+          </div>
         )}
       </div>
     </div>

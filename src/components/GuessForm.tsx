@@ -24,7 +24,7 @@ const GuessForm: React.FC = () => {
     gameState.answerRevealed;
 
   return (
-    <form onSubmit={handleSubmit} className="w-full max-w-md mx-auto px-4 animate-fade-in">
+    <form onSubmit={handleSubmit} className="w-full max-w-md mx-auto px-2 animate-fade-in">
       <div className="flex space-x-2 relative">
         <Input
           type="text"
@@ -32,15 +32,16 @@ const GuessForm: React.FC = () => {
           onChange={(e) => setGuess(e.target.value)}
           placeholder={gameState.question?.type === 'numerical' ? 'Enter a number' : 'Enter your answer'}
           disabled={isDisabled}
-          className="flex-1 pl-4 pr-12 py-6 text-lg shadow-sm focus:ring-2 focus:ring-green-500 focus:border-transparent"
+          className="flex-1 pl-3 pr-10 py-4 text-base shadow-sm focus:ring-2 focus:ring-green-500 focus:border-transparent"
           maxLength={50}
         />
         <Button 
           type="submit" 
           disabled={isDisabled || !guess.trim()} 
-          className="absolute right-2 top-1/2 transform -translate-y-1/2 bg-green-600 hover:bg-green-700 text-white rounded-full w-10 h-10 p-0 flex items-center justify-center"
+          className="absolute right-2 top-1/2 transform -translate-y-1/2 bg-green-600 hover:bg-green-700 text-white rounded-full w-8 h-8 p-0 flex items-center justify-center"
+          size="sm"
         >
-          <SendIcon className="h-5 w-5" />
+          <SendIcon className="h-4 w-4" />
         </Button>
       </div>
     </form>

@@ -23,7 +23,7 @@ The application follows a client-side architecture built with React and Vite. Co
 ```mermaid
 graph TD
     subgraph Browser
-        LocalStorage[ ("Local Storage (Game State, Streaks)")]
+        LocalStorage[("Local Storage (Game State, Streaks)")]
     end
 
     subgraph ReactApp [React Application (Vite Build)]

@@ -22,31 +22,19 @@ The application follows a client-side architecture built with React and Vite. Co
 
 ```mermaid
 graph TD
-    subgraph Browser
-        LocalStorage[("Local Storage (Game State, Streaks)")]:::dbStyle
+    subgraph "User's Browser"
+        A[User Interaction] --> B{React Application};
+        B --> C[UI Components (Pages, Shadcn, Custom)];
+        C --> D{React Context (e.g., GameContext)};
+        D -- Manages State --> E[Game Logic (Hooks, Utils)];
+        D -- Reads/Writes --> F[questions.ts Data];
+        D -- Persists/Loads --> G[(Local Storage)];
+        E --> F;
+        E --> H[lib/utils];
+        C --> H;
     end
 
-    subgraph "React Application (Vite Build)"
-        Router(React Router) --> Page[Current Page Component]
-
-        Page -- Renders --> Components[Reusable UI Components (Shadcn/Custom)]
-        Page -- Uses --> Hooks[Custom Hooks (e.g., useGameState)]
-        Page -- Accesses/Updates --> Contexts[Global Contexts (e.g., GameContext)]
-
-        Components -- Accesses/Updates --> Contexts
-        Hooks -- Reads/Writes --> Contexts
-        Contexts -- Persists/Loads --> LocalStorage
-
-        Components -- Use --> LibUtils[lib/utils]
-        Hooks -- Use --> LibUtils
-        Contexts -- Uses --> Data[data/questions.ts]
-    end
-
-    User[User Interaction] --> Page
-    User --> Components
-
-    classDef dbStyle fill:#f9f,stroke:#333,stroke-width:2px
-    class LocalStorage dbStyle
+    style G fill:#f9f,stroke:#333,stroke-width:2px
 ```
 
 **Data Flow Diagram (Example: Answering a Question):**

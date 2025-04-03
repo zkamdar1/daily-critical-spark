@@ -12,6 +12,7 @@ import {
   DialogTrigger,
 } from './ui/dialog';
 import { Checkbox } from './ui/checkbox';
+import { useIsMobile } from '../hooks/use-mobile';
 
 interface RevealAnswerDialogProps {
   question: Question | null;
@@ -27,6 +28,7 @@ const RevealAnswerDialog: React.FC<RevealAnswerDialogProps> = ({
   const [open, setOpen] = useState(false);
   const [claimsCorrect, setClaimsCorrect] = useState(false);
   const [showAnswer, setShowAnswer] = useState(false);
+  const isMobile = useIsMobile();
 
   if (!question || gameEnded) return null;
 
@@ -59,12 +61,13 @@ const RevealAnswerDialog: React.FC<RevealAnswerDialogProps> = ({
         <Button 
           variant="outline" 
           className="text-gray-500 border-gray-200 hover:bg-gray-50"
+          size={isMobile ? "sm" : "default"}
         >
           I Think I'm Right
         </Button>
       </DialogTrigger>
-      <DialogContent className="sm:max-w-[425px]">
-        <DialogHeader>
+      <DialogContent className="sm:max-w-[425px] p-4">
+        <DialogHeader className="space-y-1">
           <DialogTitle>Reveal Answer</DialogTitle>
           <DialogDescription>
             {!showAnswer ? 
@@ -75,37 +78,37 @@ const RevealAnswerDialog: React.FC<RevealAnswerDialogProps> = ({
           </DialogDescription>
         </DialogHeader>
         
-        <div className="py-4">
+        <div className="py-2">
           {showAnswer ? (
             <>
-              <p className="mb-4 font-semibold text-center">The answer is:</p>
-              <div className="p-3 bg-gray-100 rounded-md text-center font-bold">
+              <p className="mb-2 font-semibold text-center text-sm">The answer is:</p>
+              <div className="p-2 bg-gray-100 rounded-md text-center font-bold">
                 {answerDisplay}
               </div>
               
-              <div className="flex items-center space-x-2 mt-6">
+              <div className="flex items-center space-x-2 mt-4">
                 <Checkbox 
                   id="claim-correct" 
                   checked={claimsCorrect}
                   onCheckedChange={(checked) => setClaimsCorrect(checked as boolean)}
                 />
-                <label htmlFor="claim-correct" className="text-sm">
+                <label htmlFor="claim-correct" className="text-xs sm:text-sm">
                   My answer was essentially correct, but wasn't matching the text
                 </label>
               </div>
             </>
           ) : (
-            <p className="text-center text-amber-600">
+            <p className="text-center text-amber-600 text-sm">
               This action will reveal the answer and end your current game.
             </p>
           )}
         </div>
         
-        <DialogFooter>
-          <Button variant="outline" onClick={handleCancel}>
+        <DialogFooter className="mt-2">
+          <Button variant="outline" onClick={handleCancel} size={isMobile ? "sm" : "default"}>
             Cancel
           </Button>
-          <Button onClick={handleReveal}>
+          <Button onClick={handleReveal} size={isMobile ? "sm" : "default"}>
             {!showAnswer ? "Show Answer" : "Confirm"}
           </Button>
         </DialogFooter>

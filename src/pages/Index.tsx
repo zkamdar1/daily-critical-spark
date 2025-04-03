@@ -4,7 +4,7 @@ import GameContainer from '../components/GameContainer';
 
 const Index: React.FC = () => {
   return (
-    <div className="min-h-screen bg-gradient-to-b from-white to-gray-50">
+    <div className="h-[100dvh] overflow-hidden">
       <GameContainer />
     </div>
   );

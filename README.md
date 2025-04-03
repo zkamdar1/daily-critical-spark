@@ -26,7 +26,7 @@ graph TD
         LocalStorage[("Local Storage (Game State, Streaks)")]
     end
 
-    subgraph ReactApp [React Application (Vite Build)]
+    subgraph ReactApp "React Application (Vite Build)"
         Router(React Router) --> Page[Current Page Component]
 
         Page -- Renders --> Components[Reusable UI Components (Shadcn/Custom)]

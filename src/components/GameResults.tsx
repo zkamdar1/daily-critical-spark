@@ -1,7 +1,6 @@
-
 import React from 'react';
 import { Button } from './ui/button';
-import { useGame } from '../contexts/GameContext';
+import { useGame } from '../hooks/useGame';
 import { Share2 } from 'lucide-react';
 
 const GameResults: React.FC = () => {

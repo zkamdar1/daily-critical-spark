@@ -23,7 +23,8 @@ const initialGameState: GameState = {
   answerRevealed: false,
 };
 
-const GameContext = createContext<GameContextProps | undefined>(undefined);
+// Export the context itself
+export const GameContext = createContext<GameContextProps | undefined>(undefined);
 
 export const GameProvider: React.FC<{ children: React.ReactNode }> = ({ children }) => {
   const [gameState, setGameState] = useState<GameState>(initialGameState);
@@ -308,13 +309,4 @@ export const GameProvider: React.FC<{ children: React.ReactNode }> = ({ children
       {children}
     </GameContext.Provider>
   );
-};
-
-// eslint-disable-next-line react-refresh/only-export-components
-export const useGame = (): GameContextProps => {
-  const context = useContext(GameContext);
-  if (context === undefined) {
-    throw new Error('useGame must be used within a GameProvider');
-  }
-  return context;
 };

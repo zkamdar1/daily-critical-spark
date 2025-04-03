@@ -5,7 +5,7 @@ import { GameState } from '../types/game';
 import RevealAnswerDialog from './RevealAnswerDialog';
 import HintDialog from './HintDialog';
 import ExplanationDialog from './ExplanationDialog';
-import { useGame } from '../contexts/GameContext';
+import { useGame } from '../hooks/useGame';
 
 interface GameHeaderProps {
   gameState: GameState;

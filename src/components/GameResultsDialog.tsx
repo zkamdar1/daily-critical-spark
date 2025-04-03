@@ -7,7 +7,8 @@ import {
   DialogDescription
 } from '@/components/ui/dialog';
 import GameResults from './GameResults';
-import { useGame } from '../contexts/GameContext';
+// Remove unused import
+// import { useGame } from '../contexts/GameContext';
 
 // Add props for open state
 interface GameResultsDialogProps {

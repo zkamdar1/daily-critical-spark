@@ -3,7 +3,7 @@ import { GameProvider } from '../contexts/GameContext';
 import QuestionDisplay from './QuestionDisplay';
 import GuessForm from './GuessForm';
 import AttemptsDisplay from './AttemptsDisplay';
-import { useGame } from '../contexts/GameContext';
+import { useGame } from '../hooks/useGame';
 import IntroductionDialog from './IntroductionDialog';
 import GameHeader from './GameHeader';
 import { Heart } from 'lucide-react';

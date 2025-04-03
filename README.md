@@ -23,10 +23,10 @@ The application follows a client-side architecture built with React and Vite. Co
 ```mermaid
 graph TD
     subgraph Browser
-        LocalStorage[("Local Storage (Game State, Streaks)")]
+        LocalStorage[("Local Storage (Game State, Streaks)")]:::dbStyle
     end
 
-    subgraph ReactApp "React Application (Vite Build)"
+    subgraph "React Application (Vite Build)"
         Router(React Router) --> Page[Current Page Component]
 
         Page -- Renders --> Components[Reusable UI Components (Shadcn/Custom)]
@@ -45,7 +45,8 @@ graph TD
     User[User Interaction] --> Page
     User --> Components
 
-    style LocalStorage fill:#f9f,stroke:#333,stroke-width:2px
+    classDef dbStyle fill:#f9f,stroke:#333,stroke-width:2px
+    class LocalStorage dbStyle
 ```
 
 **Data Flow Diagram (Example: Answering a Question):**

@@ -8,7 +8,7 @@ import {
   DialogTitle,
 } from '@/components/ui/dialog';
 import { Button } from '@/components/ui/button';
-import { useGame } from '../contexts/GameContext';
+import { useGame } from '../hooks/useGame';
 import { LightbulbIcon, HelpCircle, BookOpen, Award, ListChecks } from 'lucide-react';
 
 interface IntroductionDialogProps {

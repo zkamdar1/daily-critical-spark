@@ -20,22 +20,6 @@ The application follows a client-side architecture built with React and Vite. Co
 
 **Architecture Diagram:**
 
-```mermaid
-graph TD
-    subgraph "User's Browser"
-        A[User Interaction] --> B{React Application};
-        B --> C[UI Components (Pages, Shadcn, Custom)];
-        C --> D{React Context (e.g., GameContext)};
-        D -- Manages State --> E[Game Logic (Hooks, Utils)];
-        D -- Reads/Writes --> F[questions.ts Data];
-        D -- Persists/Loads --> G[(Local Storage)];
-        E --> F;
-        E --> H[lib/utils];
-        C --> H;
-    end
-
-    style G fill:#f9f,stroke:#333,stroke-width:2px
-```
 
 **Data Flow Diagram (Example: Answering a Question):**
 

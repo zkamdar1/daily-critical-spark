@@ -9,27 +9,50 @@ import {
   DialogTitle,
 } from '@/components/ui/dialog';
 import { Button } from '@/components/ui/button';
+import { useGame } from '../contexts/GameContext';
 
-const IntroductionDialog: React.FC = () => {
+interface IntroductionDialogProps {
+  open?: boolean;
+  onOpenChange?: (open: boolean) => void;
+}
+
+const IntroductionDialog: React.FC<IntroductionDialogProps> = ({ 
+  open: controlledOpen,
+  onOpenChange 
+}) => {
   const [isOpen, setIsOpen] = useState(false);
+  const { gameState } = useGame();
+
+  // Handle controlled vs uncontrolled state
+  const isControlled = controlledOpen !== undefined;
+  const isDialogOpen = isControlled ? controlledOpen : isOpen;
+
+  const handleOpenChange = (newOpen: boolean) => {
+    if (!isControlled) {
+      setIsOpen(newOpen);
+    }
+    onOpenChange?.(newOpen);
+  };
 
   useEffect(() => {
     const hasSeenIntro = localStorage.getItem('hasSeenIntro');
-    if (!hasSeenIntro) {
+    if (!hasSeenIntro && !isControlled) {
       setIsOpen(true);
     }
-  }, []);
+  }, [isControlled]);
 
   const handleClose = () => {
     localStorage.setItem('hasSeenIntro', 'true');
-    setIsOpen(false);
+    handleOpenChange(false);
   };
 
   return (
-    <Dialog open={isOpen} onOpenChange={setIsOpen}>
+    <Dialog open={isDialogOpen} onOpenChange={handleOpenChange}>
       <DialogContent className="sm:max-w-[500px] p-6 bg-gray-800 border-gray-700 text-gray-100">
         <DialogHeader>
-          <DialogTitle className="text-2xl font-bold text-center text-gray-100">Daily Quiz Challenge</DialogTitle>
+          <DialogTitle className="text-2xl font-bold text-center text-gray-100">
+            #CriticalThinker
+          </DialogTitle>
           <div className="text-center text-sm text-gray-400 mt-1">Test your knowledge every day!</div>
         </DialogHeader>
         
@@ -56,7 +79,7 @@ const IntroductionDialog: React.FC = () => {
               </div>
               
               <div className="bg-gray-700 p-3 rounded-md">
-                <p className="font-bold text-blue-400">Current Streak: <span>0</span></p>
+                <p className="font-bold text-blue-400">Current Streak: <span>{gameState.streak}</span></p>
                 <p className="text-gray-300 text-xs mt-1">Come back daily to build your knowledge streak!</p>
               </div>
             </div>

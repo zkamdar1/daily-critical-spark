@@ -81,6 +81,7 @@ const HintExplanation: React.FC<HintExplanationProps> = ({
         {(gameEnded || answerRevealed) && question.explanation && (
           <div className="space-y-1">
             <Button 
+              id="explanation-toggle"
               onClick={handleToggleExplanation}
               variant="outline"
               size="sm"

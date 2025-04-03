@@ -44,63 +44,7 @@ const GuessForm: React.FC = () => {
           <SendIcon className="h-4 w-4" />
         </Button>
       </div>
-      <div className="mt-1 flex justify-center">
-        <div className="grid grid-cols-10 gap-1">
-          <KeyboardButton>Q</KeyboardButton>
-          <KeyboardButton>W</KeyboardButton>
-          <KeyboardButton>E</KeyboardButton>
-          <KeyboardButton>R</KeyboardButton>
-          <KeyboardButton>T</KeyboardButton>
-          <KeyboardButton>Y</KeyboardButton>
-          <KeyboardButton>U</KeyboardButton>
-          <KeyboardButton>I</KeyboardButton>
-          <KeyboardButton>O</KeyboardButton>
-          <KeyboardButton>P</KeyboardButton>
-        </div>
-      </div>
-      <div className="flex justify-center">
-        <div className="grid grid-cols-9 gap-1">
-          <KeyboardButton>A</KeyboardButton>
-          <KeyboardButton>S</KeyboardButton>
-          <KeyboardButton>D</KeyboardButton>
-          <KeyboardButton>F</KeyboardButton>
-          <KeyboardButton>G</KeyboardButton>
-          <KeyboardButton>H</KeyboardButton>
-          <KeyboardButton>J</KeyboardButton>
-          <KeyboardButton>K</KeyboardButton>
-          <KeyboardButton>L</KeyboardButton>
-        </div>
-      </div>
-      <div className="flex justify-center">
-        <div className="grid grid-cols-9 gap-1">
-          <KeyboardButton className="col-span-2">ENTER</KeyboardButton>
-          <KeyboardButton>Z</KeyboardButton>
-          <KeyboardButton>X</KeyboardButton>
-          <KeyboardButton>C</KeyboardButton>
-          <KeyboardButton>V</KeyboardButton>
-          <KeyboardButton>B</KeyboardButton>
-          <KeyboardButton>N</KeyboardButton>
-          <KeyboardButton>M</KeyboardButton>
-          <KeyboardButton>⌫</KeyboardButton>
-        </div>
-      </div>
     </form>
-  );
-};
-
-interface KeyboardButtonProps {
-  children: React.ReactNode;
-  className?: string;
-}
-
-const KeyboardButton: React.FC<KeyboardButtonProps> = ({ children, className = "" }) => {
-  return (
-    <button 
-      type="button"
-      className={`bg-gray-600 hover:bg-gray-500 text-gray-200 rounded text-xs sm:text-sm py-2 px-1 ${className}`}
-    >
-      {children}
-    </button>
   );
 };
 

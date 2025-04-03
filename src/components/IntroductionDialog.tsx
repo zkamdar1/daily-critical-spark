@@ -12,42 +12,30 @@ import { useGame } from '../contexts/GameContext';
 import { LightbulbIcon, HelpCircle, BookOpen, Award, ListChecks } from 'lucide-react';
 
 interface IntroductionDialogProps {
-  open?: boolean;
-  onOpenChange?: (open: boolean) => void;
+  open: boolean;
+  onOpenChange: (open: boolean) => void;
 }
 
 const IntroductionDialog: React.FC<IntroductionDialogProps> = ({ 
-  open: controlledOpen,
+  open,
   onOpenChange 
 }) => {
-  const [isOpen, setIsOpen] = useState(false);
   const { gameState } = useGame();
-
-  // Handle controlled vs uncontrolled state
-  const isControlled = controlledOpen !== undefined;
-  const isDialogOpen = isControlled ? controlledOpen : isOpen;
-
-  const handleOpenChange = (newOpen: boolean) => {
-    if (!isControlled) {
-      setIsOpen(newOpen);
-    }
-    onOpenChange?.(newOpen);
-  };
 
   useEffect(() => {
     const hasSeenIntro = localStorage.getItem('hasSeenIntro');
-    if (!hasSeenIntro && !isControlled) {
-      setIsOpen(true);
+    if (!hasSeenIntro && onOpenChange) {
+      onOpenChange(true);
     }
-  }, [isControlled]);
+  }, []);
 
   const handleClose = () => {
     localStorage.setItem('hasSeenIntro', 'true');
-    handleOpenChange(false);
+    onOpenChange(false);
   };
 
   return (
-    <Dialog open={isDialogOpen} onOpenChange={handleOpenChange}>
+    <Dialog open={open} onOpenChange={onOpenChange}>
       <DialogContent className="sm:max-w-[500px] p-0 bg-gray-800 border-gray-700 text-gray-100 flex flex-col max-h-[90vh]">
         {/* Header */}
         <DialogHeader className="p-6 pb-4 text-center">

@@ -57,7 +57,7 @@ const GameContent: React.FC = () => {
         Questions update daily at midnight.
       </footer>
 
-      <IntroductionDialog />
+      <IntroductionDialog open={showIntro} onOpenChange={setShowIntro} />
       <GameResultsDialog open={showResults} onOpenChange={setShowResults} />
     </div>
   );

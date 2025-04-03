@@ -1,73 +1,123 @@
-# Welcome to your Lovable project
+# Daily Critical Thinker
 
-## Project info
+A daily challenge game to test and improve critical thinking skills through a variety of puzzles and questions.
 
-**URL**: https://lovable.dev/projects/fff7bbee-21e1-4e19-a551-86275daa7d49
+## Features
 
-## How can I edit this code?
+- Daily critical thinking challenges
+- Different question types (numerical and text-based)
+- Hint system to help when stuck
+- Feedback on answers with closeness indicators for numerical questions
+- Streaks to track your progress
+- Share your results with friends
 
-There are several ways of editing your application.
+## Tech Stack
 
-**Use Lovable**
+- React
+- TypeScript
+- Vite
+- Tailwind CSS
+- Shadcn UI components
+- React Router
+- React Query
+- Local storage for game state persistence
 
-Simply visit the [Lovable Project](https://lovable.dev/projects/fff7bbee-21e1-4e19-a551-86275daa7d49) and start prompting.
+## Getting Started
 
-Changes made via Lovable will be committed automatically to this repo.
+### Prerequisites
 
-**Use your preferred IDE**
+- Node.js (v18 or higher)
+- npm, yarn, or bun
 
-If you want to work locally using your own IDE, you can clone this repo and push changes. Pushed changes will also be reflected in Lovable.
+### Installation
 
-The only requirement is having Node.js & npm installed - [install with nvm](https://github.com/nvm-sh/nvm#installing-and-updating)
+```bash
+# Clone the repository
+git clone https://github.com/yourusername/daily-critical-thinker.git
+cd daily-critical-thinker
 
-Follow these steps:
+# Install dependencies
+npm install
+# or
+yarn install
+# or
+bun install
 
-```sh
-# Step 1: Clone the repository using the project's Git URL.
-git clone <YOUR_GIT_URL>
-
-# Step 2: Navigate to the project directory.
-cd <YOUR_PROJECT_NAME>
-
-# Step 3: Install the necessary dependencies.
-npm i
-
-# Step 4: Start the development server with auto-reloading and an instant preview.
+# Start the development server
 npm run dev
+# or
+yarn dev
+# or
+bun dev
 ```
 
-**Edit a file directly in GitHub**
+Your application will be running at http://localhost:8080
 
-- Navigate to the desired file(s).
-- Click the "Edit" button (pencil icon) at the top right of the file view.
-- Make your changes and commit the changes.
+### Building for Production
 
-**Use GitHub Codespaces**
+```bash
+npm run build
+# or
+yarn build
+# or
+bun build
+```
 
-- Navigate to the main page of your repository.
-- Click on the "Code" button (green button) near the top right.
-- Select the "Codespaces" tab.
-- Click on "New codespace" to launch a new Codespace environment.
-- Edit files directly within the Codespace and commit and push your changes once you're done.
+The build output will be in the `dist` directory.
 
-## What technologies are used for this project?
+## Deployment
 
-This project is built with:
+This project can be deployed on platforms like Vercel, Netlify, or GitHub Pages.
 
-- Vite
-- TypeScript
-- React
-- shadcn-ui
-- Tailwind CSS
+### Deploying to Vercel
 
-## How can I deploy this project?
+1. Create an account on [Vercel](https://vercel.com/)
+2. Connect your GitHub/GitLab/Bitbucket account
+3. Import your repository
+4. Vercel will automatically detect it as a Vite project and set up the build configuration
+5. Deploy!
 
-Simply open [Lovable](https://lovable.dev/projects/fff7bbee-21e1-4e19-a551-86275daa7d49) and click on Share -> Publish.
+### Deploying to Netlify
 
-## Can I connect a custom domain to my Lovable project?
+1. Create an account on [Netlify](https://www.netlify.com/)
+2. Connect your GitHub/GitLab/Bitbucket account
+3. Import your repository
+4. Set the build command to `npm run build` and the publish directory to `dist`
+5. Deploy!
 
-Yes it is!
+## Customizing the Game
 
-To connect a domain, navigate to Project > Settings > Domains and click Connect Domain.
+### Adding New Questions
 
-Read more here: [Setting up a custom domain](https://docs.lovable.dev/tips-tricks/custom-domain#step-by-step-guide)
+To add new questions, edit the `src/data/questions.ts` file. Each question should follow the structure defined in the `Question` interface:
+
+```typescript
+// For text-based questions
+{
+  id: number;
+  text: string;
+  type: 'text';
+  answer: string[];  // Multiple possible answers
+  day: number;
+  hint?: string;
+  explanation?: string;
+}
+
+// For numerical questions
+{
+  id: number;
+  text: string;
+  type: 'numerical';
+  answer: number;
+  min?: number;  // Optional minimum value for range
+  max?: number;  // Optional maximum value for range
+  day: number;
+  hint?: string;
+  explanation?: string;
+}
+```
+
+## Acknowledgments
+
+- Inspired by games like Wordle and other daily puzzle challenges
+- Built with [Shadcn UI](https://ui.shadcn.com/)

@@ -1,26 +1,53 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="en">
   <head>
     <meta charset="UTF-8" />
+    <link rel="icon" type="image/x-icon" href="/lightbulb.ico" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>daily-critical-spark</title>
-    <meta name="description" content="Lovable Generated Project" />
-    <meta name="author" content="Lovable" />
-
-    <meta property="og:title" content="daily-critical-spark" />
-    <meta property="og:description" content="Lovable Generated Project" />
+    <meta name="description" content="Critical Thinker - A daily critical thinking challenge game" />
+    <meta name="author" content="Critical Thinker" />
+    
+    <!-- Additional meta tags for better LLM categorization -->
+    <meta name="keywords" content="critical thinking, daily challenge, logical reasoning, puzzle, brain teaser, problem solving" />
+    <meta name="application-name" content="Critical Thinker" />
+    <meta name="category" content="Education, Puzzle, Game" />
+    <meta name="format-detection" content="telephone=no" />
+    
+    <meta property="og:title" content="Critical Thinker" />
+    <meta property="og:description" content="Test your critical thinking skills with a daily challenge" />
     <meta property="og:type" content="website" />
-    <meta property="og:image" content="https://lovable.dev/opengraph-image-p98pqg.png" />
-
+    <meta property="og:image" content="/og-image.png" />
+    
     <meta name="twitter:card" content="summary_large_image" />
-    <meta name="twitter:site" content="@lovable_dev" />
-    <meta name="twitter:image" content="https://lovable.dev/opengraph-image-p98pqg.png" />
-  </head>
+    <meta name="twitter:title" content="Critical Thinker" />
+    <meta name="twitter:image" content="/og-image.png" />
+    
+    <title>Critical Thinker</title>
+    
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
 
+    <!-- Structured data for LLM SEO -->
+    <script type="application/ld+json">
+    {
+      "@context": "https://schema.org",
+      "@type": "WebApplication",
+      "name": "Critical Thinker",
+      "description": "A daily challenge game to improve critical thinking and problem-solving skills",
+      "applicationCategory": "EducationalApplication, Game",
+      "operatingSystem": "Web",
+      "offers": {
+        "@type": "Offer",
+        "price": "0",
+        "priceCurrency": "USD"
+      },
+      "keywords": "critical thinking, daily puzzle, logic, problem solving, brain teaser, riddle, Wordle-like"
+    }
+    </script>
+  </head>
   <body>
     <div id="root"></div>
-    <!-- IMPORTANT: DO NOT REMOVE THIS SCRIPT TAG OR THIS VERY COMMENT! -->
-    <script src="https://cdn.gpteng.co/gptengineer.js" type="module"></script>
     <script type="module" src="/src/main.tsx"></script>
   </body>
 </html>

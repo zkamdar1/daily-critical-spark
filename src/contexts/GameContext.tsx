@@ -1,7 +1,7 @@
 import React, { createContext, useContext, useEffect, useState } from 'react';
 import { Attempt, GameState, Question } from '../types/game';
 import { getTodaysQuestion } from '../data/questions';
-import { toast } from '../components/ui/use-toast';
+import { toast } from '../hooks/use-toast';
 
 interface GameContextProps {
   gameState: GameState;
@@ -234,11 +234,17 @@ export const GameProvider: React.FC<{ children: React.ReactNode }> = ({ children
     const { attempts, question, hintUsed, answerRevealed } = gameState;
     let shareText = `#CriticalThinker #Day${question.day}\n`;
     
-    if (attempts.length > 0 && attempts[attempts.length - 1].isCorrect) {
-      shareText += `${attempts.length}/6`;
-    } else if (answerRevealed) {
+    const lastAttempt = attempts.length > 0 ? attempts[attempts.length - 1] : null;
+
+    if (lastAttempt && lastAttempt.isCorrect) {
+      if (lastAttempt.revealedAnswer) { // Was correct *because* it was revealed and claimed
+        shareText += `${attempts.length}/6*`; 
+      } else { // Naturally correct
+        shareText += `${attempts.length}/6`;
+      }
+    } else if (answerRevealed) { // Revealed but *not* claimed correct (gave up)
       shareText += 'X/6*';
-    } else {
+    } else { // Failed without revealing
       shareText += 'X/6';
     }
     
@@ -247,50 +253,47 @@ export const GameProvider: React.FC<{ children: React.ReactNode }> = ({ children
     }
     
     shareText += '\n\n';
-
-    if (question.type === 'numerical') {
-      for (const attempt of attempts) {
-        const score = attempt.closenessScore || 0;
-        if (score === 100) {
-          shareText += '🟢🟢🟢\n';
-        } else if (score >= 66) {
-          shareText += '🟢🟡🟡\n';
-        } else if (score >= 33) {
-          shareText += '🟡🟡🔵\n';
-        } else {
-          shareText += '🔵🔵🔵\n';
-        }
-      }
-    } else {
-      for (const attempt of attempts) {
-        if (attempt.isCorrect) {
-          shareText += '🟢🟢🟢\n';
-        } else {
-          shareText += '🔴🔴🔴\n';
-        }
-      }
-    }
     
-    if (answerRevealed && attempts.length < 6) {
-      shareText += '⚪⚪⚪\n';
-    }
-
-    shareText += '\ncriticalthinker.app';
-
-    navigator.clipboard.writeText(shareText)
-      .then(() => {
-        toast({
-          title: "Copied to clipboard!",
-          description: "Share your results with friends",
-        });
-      })
-      .catch(() => {
-        toast({
-          title: "Couldn't copy to clipboard",
-          description: "Please copy the text manually",
-          variant: "destructive"
-        });
+    // Add attempt summary
+    attempts.forEach(attempt => {
+      if (question.type === 'numerical') {
+        const closeness = attempt.closenessScore || 0;
+        if (closeness >= 90) {
+          shareText += '🟩'; // Very close or correct
+        } else if (closeness >= 70) {
+          shareText += '🟨'; // Close
+        } else if (closeness >= 40) {
+          shareText += '🟧'; // Somewhat close
+        } else {
+          shareText += '🟥'; // Not close
+        }
+      } else {
+        if (attempt.isCorrect) {
+          shareText += '🟩'; // Correct
+        } else {
+          shareText += '🟥'; // Incorrect
+        }
+      }
+    });
+    
+    // Dynamically use the current window's origin for the share link
+    const shareUrl = window.location.origin;
+    shareText += `\n\n${shareUrl}`;
+    
+    try {
+      navigator.clipboard.writeText(shareText);
+      toast({
+        title: "Results Copied",
+        description: "Share your results with friends!",
       });
+    } catch (err) {
+      console.error('Failed to copy results', err);
+      toast({
+        title: "Couldn't copy results",
+        description: "Please try again or copy manually",
+        variant: "destructive",
+      });
+    }
   };
 
   return (
@@ -307,6 +310,7 @@ export const GameProvider: React.FC<{ children: React.ReactNode }> = ({ children
   );
 };
 
+// eslint-disable-next-line react-refresh/only-export-components
 export const useGame = (): GameContextProps => {
   const context = useContext(GameContext);
   if (context === undefined) {

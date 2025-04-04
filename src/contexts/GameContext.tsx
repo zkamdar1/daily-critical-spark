@@ -35,26 +35,40 @@ export const GameProvider: React.FC<{ children: React.ReactNode }> = ({ children
     if (storedState) {
       const parsedState: GameState = JSON.parse(storedState);
       
-      const today = new Date().toISOString().split('T')[0];
+      // Get today's date in local timezone (YYYY-MM-DD)
+      const nowLocal = new Date();
+      const year = nowLocal.getFullYear();
+      const month = String(nowLocal.getMonth() + 1).padStart(2, '0'); // Months are 0-indexed
+      const day = String(nowLocal.getDate()).padStart(2, '0');
+      const todayLocal = `${year}-${month}-${day}`;
       
-      if (parsedState.lastPlayedDate !== today) {
-        const todaysQuestion = getTodaysQuestion();
+      // Compare stored date (which should ideally also be local) with current local date
+      if (parsedState.lastPlayedDate !== todayLocal) {
+        // Local midnight has passed since last play
+        const todaysQuestion = getTodaysQuestion(); // Fetches based on UTC day logic now
         setGameState({
           currentDay: todaysQuestion.day,
           question: todaysQuestion,
           attempts: [],
           gameEnded: false,
-          streak: parsedState.streak,
-          lastPlayedDate: today,
+          // Preserve streak if the last played date is valid, otherwise reset
+          streak: parsedState.lastPlayedDate ? parsedState.streak : 0, 
+          lastPlayedDate: todayLocal, // Store the current local date
           hintUsed: false,
           answerRevealed: false,
         });
       } else {
+        // Same local day, load the saved state
         setGameState(parsedState);
       }
     } else {
+      // No saved state, initialize for the current local day
       const todaysQuestion = getTodaysQuestion();
-      const today = new Date().toISOString().split('T')[0];
+      const nowLocal = new Date();
+      const year = nowLocal.getFullYear();
+      const month = String(nowLocal.getMonth() + 1).padStart(2, '0');
+      const day = String(nowLocal.getDate()).padStart(2, '0');
+      const todayLocal = `${year}-${month}-${day}`;
       
       setGameState({
         currentDay: todaysQuestion.day,
@@ -62,11 +76,12 @@ export const GameProvider: React.FC<{ children: React.ReactNode }> = ({ children
         attempts: [],
         gameEnded: false,
         streak: 0,
-        lastPlayedDate: today,
+        lastPlayedDate: todayLocal, // Store the current local date
         hintUsed: false,
         answerRevealed: false,
       });
     }
+    // Intentionally empty dependency array, runs only on mount
   }, []);
 
   useEffect(() => {

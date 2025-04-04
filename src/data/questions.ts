@@ -1030,15 +1030,35 @@ export const questions: Question[] = [
   }
 ];
 
-// Function to get today's question based on the day of the year
+// Function to get today's question based on the day of the year (UTC)
 export const getTodaysQuestion = (): Question => {
+  // Use UTC time to ensure consistency across timezones
   const now = new Date();
-  const start = new Date(now.getFullYear(), 0, 0);
-  const diff = now.getTime() - start.getTime();
+  const utcYear = now.getUTCFullYear();
+  const utcMonth = now.getUTCMonth();
+  const utcDay = now.getUTCDate();
+
+  // Start of the current year in UTC
+  const startOfYearUTC = Date.UTC(utcYear, 0, 1); // Jan 1st UTC
+  // Current time in UTC
+  const nowUTC = Date.UTC(utcYear, utcMonth, utcDay);
+
   const oneDay = 1000 * 60 * 60 * 24;
-  const dayOfYear = Math.floor(diff / oneDay);
-  
+  // Calculate the difference in days from the start of the year (UTC)
+  // Add 1 because day numbers are usually 1-based
+  const dayOfYearUTC = Math.floor((nowUTC - startOfYearUTC) / oneDay) + 1;
+
   // Wrap around if we have fewer questions than days in a year
-  const questionIndex = (dayOfYear - 1) % questions.length;
-  return questions[questionIndex];
+  const questionIndex = (dayOfYearUTC - 1) % questions.length;
+  // Ensure index is non-negative (in case modulo result is negative, unlikely here but good practice)
+  const safeIndex = (questionIndex + questions.length) % questions.length;
+
+  // Find the question matching the calculated UTC day index logic
+  // We need to find the question whose 'day' property corresponds to our modulo logic
+  // Assuming questions[i].day corresponds to i+1
+  const targetDay = safeIndex + 1;
+  const todaysQuestion = questions.find(q => q.day === targetDay);
+
+  // Fallback to the first question if something goes wrong (e.g., day mapping mismatch)
+  return todaysQuestion || questions[0];
 };
